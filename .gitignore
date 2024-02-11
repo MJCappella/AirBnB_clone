@@ -1,2 +1,2 @@
-test_base_model.py
-test_base_model_dict.py
+__pycache__
+*.pyc

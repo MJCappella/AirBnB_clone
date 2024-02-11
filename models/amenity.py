@@ -1,15 +1,15 @@
 #!/usr/bin/python3
+"""
+Module for Amenity class
+"""
 from models.base_model import BaseModel
 
 
 class Amenity(BaseModel):
+    """Custom amenity class
+
+    Attributes:
+        name(str): amenity name
 
     """
-    Represents an amenity in the system.
-    """
-    def __init__(self, *args, **kwargs):
-
-        """Initialize a new Amenity."""
-
-        super().__init__(*args, **kwargs)
-        self.name = ""
+    name = ""

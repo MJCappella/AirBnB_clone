@@ -1,5 +1,8 @@
-# engine/__init__.py
+#!/bin/usr/python3
+"""
+Init for models module
+"""
+from models.engine.file_storage import FileStorage
 
-# Import modules or define variables specific to the engine package
-# Example:
-# from . import file_storage
+storage = FileStorage()
+storage.reload()
