@@ -13,7 +13,7 @@ from models.review import Review
 class FileStorage:
     """Represent an abstracted storage engine.
 
-    Attributes:
+    Private Class Attributes:
         __file_path (str): The name of the file to save objects to.
         __objects (dict): A dictionary of instantiated objects.
     """
@@ -21,11 +21,11 @@ class FileStorage:
     __objects = {}
 
     def all(self):
-        """Return the dictionary __objects."""
+        """Public instance method that returns the dictionary __objects."""
         return FileStorage.__objects
 
     def new(self, obj):
-        """Set in __objects obj with key <obj_class_name>.id"""
+        """public instance method that sets  in __objects obj with key <obj_class_name>.id"""
         ocname = obj.__class__.__name__
         FileStorage.__objects["{}.{}".format(ocname, obj.id)] = obj
 
