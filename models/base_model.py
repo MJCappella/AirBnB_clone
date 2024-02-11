@@ -1,85 +1,54 @@
 #!/usr/bin/python3
 """
-Contains class BaseModel
+The classes for the entire BaseModel
 """
-
-from datetime import datetime
-import models
 from os import getenv
-import sqlalchemy
-from sqlalchemy import Column, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-import uuid
-
-time = "%Y-%m-%dT%H:%M:%S.%f"
-
-if models.storage_t == "db":
-    Base = declarative_base()
-else:
-    Base = object
+import models
+from uuid import uuid4
+from datetime import datetime
 
 
 class BaseModel:
-    """The BaseModel class from which future classes will be derived"""
-    if models.storage_t == "db":
-        id = Column(String(60), primary_key=True)
-        created_at = Column(DateTime, default=datetime.utcnow)
-        updated_at = Column(DateTime, default=datetime.utcnow)
-
+    """The BaseModel for the entire AirBnB_clone project"""
     def __init__(self, *args, **kwargs):
-        """Initialization of the base model"""
-        if kwargs:
+        """initializing the BaseModel.
+
+        Args:
+        *args: unused arguments
+        **kwargs (dict): Key/ value pairs of attributes
+        """
+
+        tform = "%Y-%m-%dT%H:%M:%S.%f"
+        self.id = str(uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+
+        if len(kwargs) != 0:
             for key, value in kwargs.items():
-                if key != "__class__":
+                if key == 'created_at' or key == 'updated_at':
+                    setattr(self, key, datetime.strptime(value, tform))
+                else:
                     setattr(self, key, value)
-            if kwargs.get("created_at", None) and type(self.created_at) is str:
-                self.created_at = datetime.strptime(kwargs["created_at"], time)
-            else:
-                self.created_at = datetime.utcnow()
-            if kwargs.get("updated_at", None) and type(self.updated_at) is str:
-                self.updated_at = datetime.strptime(kwargs["updated_at"], time)
-            else:
-                self.updated_at = datetime.utcnow()
-            if kwargs.get("id", None) is None:
-                self.id = str(uuid.uuid4())
         else:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.utcnow()
-            self.updated_at = self.created_at
-
-    def __str__(self):
-        """String representation of the BaseModel class"""
-        return "[{:s}] ({:s}) {}".format(self.__class__.__name__, self.id,
-                                         self.__dict__)
-
-    def update(self, ignore, *args, **kwargs):
-        """updates the instance using a dictionary of kwargs"""
-        for k, v in kwargs.items():
-            if k in ignore:
-                continue
-            setattr(self, k, v)
-        self.save()
+            models.storage.new(self)
 
     def save(self):
-        """updates the attribute 'updated_at' with the current datetime"""
-        self.updated_at = datetime.utcnow()
-        models.storage.new(self)
+        """updates updated_at with the current datetime"""
+        self.updated_at = datetime.now()
         models.storage.save()
 
-    def to_dict(self, save_pass=False):
-        """returns a dictionary containing all keys/values of the instance"""
-        new_dict = self.__dict__.copy()
-        if "created_at" in new_dict:
-            new_dict["created_at"] = new_dict["created_at"].strftime(time)
-        if "updated_at" in new_dict:
-            new_dict["updated_at"] = new_dict["updated_at"].strftime(time)
-        if "password" in new_dict and not save_pass:
-            new_dict.pop("password")
-        new_dict["__class__"] = self.__class__.__name__
-        if "_sa_instance_state" in new_dict:
-            del new_dict["_sa_instance_state"]
-        return new_dict
+    def to_dict(self):
+        """Return the dictionary of the BaseModel instance.
 
-    def delete(self):
-        """delete the current instance from the storage"""
-        models.storage.delete(self)
+        Include key pair __class__ representing the class name of the object
+        """
+        dict_copy = self.__dict__.copy()
+        dict_copy['__class__'] = self.__class__
+        dict_copy['created_at'] = self.created_at.isoformat()
+        dict_copy['updated_at'] = self.updated_at.isoformat()
+        return dict_copy
+
+    def __str__(self):
+        """Return the print representation of the BaseModel instance."""
+        classname = self.__class__.__name__
+        return "[{}] ({}) {}".format(classname, self.id, self.__dict__)
