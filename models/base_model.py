@@ -2,8 +2,6 @@
 """
 The classes for the entire BaseModel
 """
-from os import getenv
-import models
 from uuid import uuid4
 from datetime import datetime
 
@@ -30,12 +28,14 @@ class BaseModel:
                 else:
                     setattr(self, key, value)
         else:
-            models.storage.new(self)
+            from models import storage
+            storage.new(self)
 
     def save(self):
         """updates updated_at with the current datetime"""
         self.updated_at = datetime.now()
-        models.storage.save()
+        from models import storage
+        storage.save()
 
     def to_dict(self):
         """Return the dictionary of the BaseModel instance.
