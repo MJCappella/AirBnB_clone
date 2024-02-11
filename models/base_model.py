@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 class BaseModel:
-    """The BaseModel for teh entire AirBnB_clone project"""
+    """The BaseModel for the entire AirBnB_clone project"""
     def __init__(self, *args, **kwargs):
         """initializing the BaseModel.
 
@@ -16,7 +16,6 @@ class BaseModel:
 
         tform = "%Y-%m-%dT%H:%M:%S.%f"
         self.id = str(uuid4())
-        self.created_at = datetime.now()
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
 
