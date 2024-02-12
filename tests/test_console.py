@@ -32,8 +32,27 @@ class TestConsole(unittest.TestCase):
             output = self.stdout.getvalue().strip()
             self.assertIn(obj_id, output)
 
-    # Add more tests for other commands like update, destroy, all, etc.
+    def test_update(self):
+        """Test the update command."""
+        with patch('sys.stdout', new=self.stdout):
+            self.console.onecmd("create BaseModel")
+            obj_id = self.stdout.getvalue().strip()
+            self.stdout = StringIO()  # Reset stdout
+            self.console.onecmd(f"update BaseModel {obj_id} name 'new_name'")
+            updated_obj_id = f"BaseModel.{obj_id}"
+            updated_obj = self.console.onecmd(f"show BaseModel {obj_id}")
+            self.assertIn("new_name", updated_obj)
+
+    def test_destroy(self):
+        """Test the destroy command."""
+        with patch('sys.stdout', new=self.stdout):
+            self.console.onecmd("create BaseModel")
+            obj_id = self.stdout.getvalue().strip()
+            self.stdout = StringIO()  # Reset stdout
+            self.console.onecmd(f"destroy BaseModel {obj_id}")
+            self.console.onecmd(f"show BaseModel {obj_id}")
+            output = self.stdout.getvalue().strip()
+            self.assertIn("** no instance found **", output)
 
 if __name__ == '__main__':
     unittest.main()
-
