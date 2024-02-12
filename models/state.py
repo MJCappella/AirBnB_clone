@@ -1,11 +1,8 @@
 #!/usr/bin/python3
+""" State Module for HBNB project """
 from models.base_model import BaseModel
 
 
 class State(BaseModel):
-    """Represents a state in the system."""
-
-    def __init__(self, *args, **kwargs):
-        """Initialize a new State."""
-        super().__init__(*args, **kwargs)
-        self.name = ""
+    """ State class """
+    name = ""
