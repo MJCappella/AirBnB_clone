@@ -1,8 +1,1 @@
-<<<<<<< HEAD
-test_base_model.py
-test_base_model_dict.py
-test_save_reload_base_model.py
-=======
-__pycache__
-*.pyc
->>>>>>> eda8912aa21071f61e3d05f7fecf95ac991320a5
+backup
